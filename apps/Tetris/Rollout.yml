@@ -1,37 +1,46 @@
-apiVersion: apps/v1
-kind: Deployment
+apiVersion: argoproj.io/v1alpha1
+kind: Rollout
 
 metadata:
   name: tetris
   namespace: tetris
 
-
 spec:
+  replicas: 2
+  revisionHistoryLimit: 2
   selector:
     matchLabels:
       app: tetris
+
   template:
     metadata:
       labels:
         app: tetris
+
     spec:
       containers:
         - name: tetris
           image: faizanqureshi1220/tetris:v1
-          imagePullPolicy: IfNotPresent
           ports:
-          - containerPort: 3000
-
+            - containerPort: 3000
           readinessProbe:
             httpGet:
               path: /health
               port: 3000
             initialDelaySeconds: 5
-            periodSeconds: 5
           livenessProbe:
             httpGet:
               path: /health
               port: 3000
             initialDelaySeconds: 10
-            periodSeconds: 10
-          
+
+  strategy:
+    canary:
+      steps:
+        - setWeight: 25
+        - pause: { duration: 30 }
+        - setWeight: 50
+        - pause: { duration: 30 }
+        - setWeight: 75
+        - pause: { duration: 30 }
+        - setWeight: 100
