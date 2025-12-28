@@ -20,7 +20,7 @@ spec:
     spec:
       containers:
         - name: tetris
-          image: faizanqureshi1220/tetris:v1
+          image: faizanqureshi1220/tetris-v2:v2
           ports:
             - containerPort: 3000
           readinessProbe:
