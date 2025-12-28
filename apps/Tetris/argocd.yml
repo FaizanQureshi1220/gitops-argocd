@@ -1,0 +1,20 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+
+metadata:
+  name: tetris
+  namespace: argocd
+  
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/FaizanQureshi1220/gitops-argocd.git
+    targetRevision: main
+    path: apps/Tetris
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: tetris
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
